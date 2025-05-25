@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Kütüphane Sistemi{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="{{ url_for('main.index') }}">Ana Sayfa</a>
+      <a href="{{ url_for('main.admin_dashboard') }}">Admin Paneli</a>
+      <a href="{{ url_for('main.ayar') }}">Ayarlar</a>
+      <a href="{{ url_for('main.kullanici_listesi') }}">Kullanıcı Yönetimi</a>
+      <a style="color: rgb(255, 0, 0);" href="{{ url_for('main.logout') }}">Çıkış Yap</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+
+<!-- Cookie Consent Banner -->
+<div id="cookieConsent" style="
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: rgba(34, 34, 34, 0.9);
+  color: white;
+  padding: 15px 10px;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
+  display: none;
+  z-index: 9999;
+  ">
+  Bu site çerez kullanır. Web sitesini kullanmaya devam ederek kabul etmiş olursunuz.
+  <button id="acceptCookies" style="
+    margin-left: 15px;
+    padding: 8px 20px;
+    background-color: #2563eb;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  ">
+    Kabul Et
+  </button>
+</div>
+
+<script>
+  window.addEventListener('load', () => {
+    if (!localStorage.getItem('cookiesAccepted')) {
+      document.getElementById('cookieConsent').style.display = 'block';
+    }
+
+    document.getElementById('acceptCookies').onclick = () => {
+      localStorage.setItem('cookiesAccepted', 'true');
+      document.getElementById('cookieConsent').style.display = 'none';
+    };
+  });
+</script>
+
+  
+</body>
+</html>

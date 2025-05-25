@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Ana Sayfa - Kitaplar{% endblock %}
+
+{% block content %}
+<h1>Kitap Galerisi</h1>
+
+<div class="grid">
+  {% for kitap in kitaplar %}
+    <div class="card {% if kitap.stok == 0 %}tukendi{% endif %}">
+      <img src="{{ url_for('static', filename='img/kitap_kapaklari/' + kitap.kapak_yolu) }}" alt="Kapak" class="kapak">
+      <div class="bilgi">
+        <strong>{{ kitap.baslik }}</strong><br>
+        <small>{{ kitap.yazar }} - {{ kitap.yayin_yili }}</small><br>
+        {% if kitap.stok > 0 %}
+          <span>Stokta: {{ kitap.stok }} adet</span>
+        {% else %}
+          <span class="tukendi-etiketi">Tükendi</span>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+CREATE DATABASE IF NOT EXISTS kutuphane_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE kutuphane_db;
+
+CREATE TABLE IF NOT EXISTS kitap (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  baslik VARCHAR(255) NOT NULL,
+  yazar VARCHAR(255) NOT NULL,
+  yayin_yili DATE NOT NULL,
+  kategori VARCHAR(100) NOT NULL,
+  stok INT NOT NULL DEFAULT 0,
+  kapak_yolu VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS kullanici (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ad_soyad VARCHAR(255) NOT NULL,
+  kayit_tarihi DATE NOT NULL DEFAULT CURDATE()
+);
+
+CREATE TABLE IF NOT EXISTS odunc (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  kitap_id INT NOT NULL,
+  kullanici_id INT NOT NULL,
+  odunc_tarihi DATE NOT NULL DEFAULT CURDATE(),
+  teslim_edildi BOOLEAN NOT NULL DEFAULT FALSE,
+  iade_tarihi DATE NULL,
+  FOREIGN KEY (kitap_id) REFERENCES kitap(id),
+  FOREIGN KEY (kullanici_id) REFERENCES kullanici(id)
+);
+
+CREATE TABLE IF NOT EXISTS admin (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  kullanici_adi VARCHAR(100) NOT NULL UNIQUE,
+  sifre VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS ayar (
+  id INT PRIMARY KEY,
+  gunluk_ceza FLOAT NOT NULL DEFAULT 2.0
+);
+
+-- Başlangıç için ayar kaydı
+INSERT INTO ayar (id, gunluk_ceza) VALUES (1, 2.0)
+ON DUPLICATE KEY UPDATE gunluk_ceza = VALUES(gunluk_ceza);

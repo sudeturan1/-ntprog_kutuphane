@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Yeni Kullanıcı Ekle{% endblock %}
+
+{% block content %}
+<h1>Yeni Kullanıcı Ekle</h1>
+
+<form method="POST" action="{{ url_for('main.kullanici_ekle') }}" class="form-modern">
+  <input type="text" name="ad_soyad" placeholder="Ad Soyad" required>
+  <button type="submit" class="btn btn-primary">Ekle</button>
+</form>
+{% endblock %}

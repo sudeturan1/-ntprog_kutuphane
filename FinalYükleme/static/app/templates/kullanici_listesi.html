@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Kullanıcılar{% endblock %}
+
+{% block content %}
+<h1>Kullanıcı Listesi</h1>
+<a href="{{ url_for('main.kullanici_ekle') }}" class="btn btn-primary" style="margin-bottom: 15px;">Yeni Kullanıcı Ekle</a>
+
+<table class="modern-table">
+  <thead>
+    <tr>
+      <th>Ad Soyad</th>
+      <th>Kayıt Tarihi</th>
+      <th>Aktif Ödünç Kitap</th>
+      <th>Gecikme</th>
+      <th>İşlemler</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for kullanici in kullanicilar %}
+    <tr>
+      <td>{{ kullanici.ad_soyad }}</td>
+      <td>{{ kullanici.kayit_tarihi }}</td>
+      <td>{{ kullanici.aktif_odunc_sayisi }}</td>
+      <td>
+        {% if kullanici.gecikme_sayisi > 0 %}
+          <span style="color: #dc2626; font-weight: 600;">Gecikme Var</span>
+        {% else %}
+          <span style="color: #16a34a;">Yok</span>
+        {% endif %}
+      </td>
+      <td>
+        <form action="{{ url_for('main.kullanici_sil', kullanici_id=kullanici.id) }}" method="POST" onsubmit="return confirm('Kullanıcıyı silmek istediğine emin misin?');">
+          <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

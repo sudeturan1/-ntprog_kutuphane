@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ kullanici.ad_soyad }} - Kullanıcı Profili{% endblock %}
+
+{% block content %}
+<h1>{{ kullanici.ad_soyad }} - Kullanıcı Profili</h1>
+<p>Kayıt Tarihi: {{ kullanici.kayit_tarihi }}</p>
+
+<h2>Aktif Ödünç Kitaplar</h2>
+
+{% if oduncler %}
+<table>
+  <thead>
+    <tr>
+      <th>Kitap</th>
+      <th>Ödünç Tarihi</th>
+      <th>Gün Farkı</th>
+      <th>Gecikme (gün)</th>
+      <th>Ceza (TL)</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for o in oduncler %}
+    <tr {% if o.gecikme > 0 %} style="background-color: #ffd6d6;" {% endif %}>
+      <td>{{ o.baslik }}</td>
+      <td>{{ o.odunc_tarihi }}</td>
+      <td>{{ o.gun_farki }}</td>
+      <td>{{ o.gecikme }}</td>
+      <td>{{ o.ceza }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p><strong>Toplam Ceza:</strong> {{ ceza_toplam }} TL</p>
+<p><small>Günlük Ceza Ücreti: {{ gunluk_ceza }} TL/gün</small></p>
+
+{% else %}
+<p>Aktif ödünç alınan kitap yok.</p>
+{% endif %}
+{% endblock %}

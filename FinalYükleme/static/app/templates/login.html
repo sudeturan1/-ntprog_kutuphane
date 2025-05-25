@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Girişi</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-box {
+            background: rgba(255 255 255 / 0.15);
+            backdrop-filter: blur(15px);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgb(0 0 0 / 0.25);
+            width: 350px;
+            text-align: center;
+            color: white;
+        }
+        .login-box h1 {
+            margin-bottom: 30px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+        }
+        .login-box input[type="text"],
+        .login-box input[type="password"] {
+            background: rgba(255 255 255 / 0.25);
+            color: white;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 14px 0;
+            border: none;
+            border-radius: 15px;
+            background-color: #5a67d8;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .login-box button:hover {
+            background-color: #434190;
+        }
+        .error-message {
+            color: #f87171;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h1>Admin Girişi <br> admin / admin123</h1>
+        <div id="error" class="error-message" style="display:none;"></div>
+        <form id="loginForm" onsubmit="return validateForm();">
+            <input type="text" id="username" name="username" placeholder="Kullanıcı Adı" required />
+            <input type="password" id="password" name="password" placeholder="Şifre" required />
+            <button type="submit">Giriş Yap</button>
+        </form>
+    </div>
+
+    <script>
+      function validateForm() {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const errorDiv = document.getElementById('error');
+        const validUser = 'admin';
+        const validPass = 'admin123';
+
+        if(username !== validUser || password !== validPass) {
+          errorDiv.textContent = 'Kullanıcı adı veya şifre yanlış!';
+          errorDiv.style.display = 'block';
+          return false; // Form gönderilmesin
+        }
+        // Başarılıysa admin paneline yönlendir
+        window.location.href = "/admin";
+        return false; // Form gönderilmesin
+      }
+    </script>
+</body>
+</html>

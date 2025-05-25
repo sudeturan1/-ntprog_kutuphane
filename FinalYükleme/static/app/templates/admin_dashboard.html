@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Admin Paneli{% endblock %}
+
+{% block content %}
+<h1>📚 Admin Paneli</h1>
+
+<h2 class="section-title">Yeni Kitap Ekle</h2>
+<form method="POST" action="{{ url_for('main.kitap_ekle') }}" enctype="multipart/form-data" class="form-modern">
+
+  <input type="text" name="baslik" placeholder="Başlık" required>
+  <input type="text" name="yazar" placeholder="Yazar" required>
+
+  <label for="yayin_tarihi">Yayın Tarihi:</label>
+  <input type="date" name="yayin_tarihi" id="yayin_tarihi" required>
+
+  <input type="text" name="kategori" placeholder="Kategori" required>
+  <input type="number" name="stok" placeholder="Stok" required min="1">
+
+  <label for="kapak_yolu" class="drop-label">Kapak Yükle (Sürükle & Bırak)</label>
+  <div id="drop-zone" class="drop-zone">
+    <span>Dosyayı buraya sürükle veya tıkla</span>
+    <input type="file" name="kapak_dosyasi" id="kapak_yolu" accept="image/*" required>
+  </div>
+
+  <div id="preview" class="preview-container">
+    <img id="img-preview" src="#" alt="Önizleme" class="img-preview">
+  </div>
+
+  <button type="submit" class="btn-primary">Kitap Ekle</button>
+</form>
+
+<hr>
+
+<!-- Kitaplar Tablosu -->
+<section>
+  <h2>Kitaplar</h2>
+</section>
+
+<section>
+  <h2 class="section-title">Kitaplar</h2>
+  <div class="kitap-grid">
+    {% for kitap in kitaplar %}
+    <div class="kitap-kart">
+      <img src="{{ url_for('static', filename='img/kitap_kapaklari/' ~ kitap.kapak_yolu) }}" alt="Kapak" class="kitap-kapak-grid">
+
+      <h3>{{ kitap.baslik }}</h3>
+      <p class="yazar">{{ kitap.yazar }}</p>
+
+      <p class="stok {% if kitap.stok == 0 %}stok-tukendi{% else %}stok-var{% endif %}">
+        {% if kitap.stok == 0 %}Tükendi{% else %}Stok: {{ kitap.stok }}{% endif %}
+      </p>
+
+      <form action="{{ url_for('main.kitap_odunc_al', kitap_id=kitap.id) }}" method="POST" class="kitap-form" style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
+  <input type="text" name="ad_soyad" placeholder="Ad Soyad Yaz" required
+         style="padding: 6px; border-radius: 6px; border: 1px solid #ccc;">
+  <button type="submit" class="btn btn-primary btn-sm" style="width: 100%;">Ödünç Ver</button>
+</form>
+
+
+      <form action="{{ url_for('main.kitap_sil', kitap_id=kitap.id) }}" method="POST" onsubmit="return confirm('Bu kitabı silmek istediğine emin misin?');" class="kitap-form">
+        <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+
+
+<hr>
+
+<section>
+  <h2 class="section-title">İade Bekleyen Kitaplar</h2>
+  <div class="kitap-grid">
+    {% for odunc in oduncler %}
+      {% if not odunc.teslim_edildi %}
+      <div class="kitap-kart">
+        <img src="{{ url_for('static', filename='img/kitap_kapaklari/' ~ odunc.kapak_yolu) }}" alt="Kapak" class="kitap-kapak-grid">
+
+        <p><strong>Ödünç ID:</strong> {{ odunc.id }}</p>
+        <p><strong>Kullanıcı:</strong> {{ odunc.ad_soyad }}</p>
+        <p><strong>Kitap:</strong> {{ odunc.baslik }}</p> <!-- Burada kitap ismi gösteriliyor -->
+        <p><strong>Ödünç Tarihi:</strong> {{ odunc.odunc_tarihi }}</p>
+
+        <form method="POST" action="{{ url_for('main.kitap_iade_et', odunc_id=odunc.id) }}" onsubmit="return confirm('Bu kitabı iade alıyorsunuz. Emin misiniz?');" class="kitap-form">
+          <button type="submit" class="btn btn-success btn-sm">İade Al</button>
+        </form>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+
+
+
+{% endblock %}
+<script>
+  const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('kapak_yolu');
+const imgPreview = document.getElementById('img-preview');
+
+dropZone.addEventListener('click', () => fileInput.click());
+
+dropZone.addEventListener('dragover', e => {
+  e.preventDefault();
+  dropZone.classList.add('dragover');
+});
+
+dropZone.addEventListener('dragleave', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+});
+
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  if (e.dataTransfer.files.length > 0) {
+    fileInput.files = e.dataTransfer.files;
+    previewImage(e.dataTransfer.files[0]);
+  }
+});
+
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length > 0) {
+    previewImage(fileInput.files[0]);
+  }
+});
+
+function previewImage(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    imgPreview.src = e.target.result;
+    imgPreview.style.display = 'block';
+  }
+  reader.readAsDataURL(file);
+}
+
+</script>
+
+
+
